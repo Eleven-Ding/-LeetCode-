@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function JSONP(config) {
+        let { url, cb, params } = config;
+        let uuu = "";
+        for (let key in params) {
+          uuu += `${key}=${params[key]}&`;
+        }
+        uuu = uuu.slice(0, -1);
+        window.callBack = cb;
+        const Script = document.createElement("script");
+        Script.src = url+"?"+uuu+"cb=cb"
+        console.log( url+"?"+uuu+"&cb=cb");
+        document.body.appendChild(Script)
+      }
+      function callBack(data) {
+        console.log(data);
+      }
+
+      JSONP({
+        url: "http://www.aaa.top/",
+        callBack: callBack,
+        params: {
+          id: 10,
+          name: "dd",
+        },
+      });
+    </script>
+  </body>
+</html>

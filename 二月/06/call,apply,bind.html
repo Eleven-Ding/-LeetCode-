@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      Function.prototype.myCall = function (ctx) {
+        if (ctx == null) {
+          ctx = window;
+        }
+        const fn = this;
+        ctx.fn = fn;
+        const args = [...arguments].slice(1);
+        ctx.fn(...args);
+        delete ctx.fn;
+      };
+
+      Function.prototype.myApply = function (ctx) {
+        if (ctx == null) {
+          ctx = window;
+        }
+        const fn = this;
+        ctx.fn = fn;
+        const args = [...arguments].slice(1);
+        ctx.fn(args);
+        delete ctx.fn;
+      };
+
+      Function.prototype.myBind = function (ctx) {
+        const args1 = [...arguments].slice(1);
+        //这就是需要绑定的函数
+        const fToBind = this;
+        //中间函数
+        const fNOP = function () {};
+        //要返回一个函数
+        const newFn = function () {
+          const args = [...arguments, ...args1];
+          return fToBind.apply(this instanceof newFn ? this : ctx, args);
+        };
+        fNOP.prototype = fToBind.prototype;
+        newFn.prototype = new fNOP();
+        return newFn;
+      };
+      function fn() {
+        console.log(this.name, arguments);
+      }
+      fn.myCall(
+        {
+          name: "2333",
+        },
+        "啦啦啦啦",
+        "露露"
+      );
+    </script>
+  </body>
+</html>
